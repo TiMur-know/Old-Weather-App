@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body{
+            margin: 0px;
+            background-color: rgb(196, 192, 187);
+            font-family: "Times New Roman", Times, serif;
+            font-size: 18px;
+            letter-spacing: -0.6px;
+            word-spacing: 0px;
+            color: #5E5E5E;
+            font-weight: 400;
+            text-decoration: none solid rgb(68, 68, 68);
+            font-style: normal;
+            font-variant: normal;
+            text-transform: none;
+        }
+        .head{
+            display: block;
+            padding: 20px 30px;
+        }
+        .head :nth-child(n){
+            display: inline;         
+        }
+        .head h1{
+           width:300px ; 
+           color:rgb(3, 150, 76);
+
+        }
+        .head input{
+            width:250px ;
+            height: 30px;
+            float: right;
+        }
+        header{
+            background-color: white;
+            
+        }
+        .menu{
+            background-color: rgb(32, 32, 32);
+            color:white;
+        }
+        .menu :nth-child(n){
+            font-size: 18px;
+            display: inline-block;
+            padding: 10px 20px;
+            border-left: 1px solid wheat;
+            
+        }
+        .menu :nth-child(1){ 
+            margin-left: 30px;
+        }
+        .today>div  {
+            margin:20px 30px;
+            background-color: rgb(238, 238, 238);
+            padding: 1px;
+        }
+        .today>div>h3{
+            margin: 20px;
+        }
+        .today h3{
+            color:rgb(3, 150, 76);
+        }
+        .today>div>h3 span{
+            float: right;
+        }
+        .info{
+            margin: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            
+        }
+        .info div{
+            text-align: center;
+            flex-grow: 1;
+        }
+        .info div>h1{
+            margin-bottom: 0;
+        }
+        .info :nth-child(2)>p{
+            margin-top: 0;
+            margin-bottom:0 ;
+        }
+        .info :nth-child(3)>p{
+            margin:10px;
+        }
+        .table table{
+            border-collapse: collapse;
+            margin:30px;
+            table-layout: fixed;
+
+        }
+        .table tr {
+            border: 1px solid black;
+        }
+        table{
+            border: 0px;
+        }
+        .datas {
+            display: block;
+        }
+        .five h3{
+            color:rgb(3, 150, 76);
+            
+        }
+        .datas div{
+            display: inline-block;
+        }
+        .five{
+            margin: 0px 10px;
+        }
+        .five>div{
+            margin:20px
+        }
+        .datas{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        .datas>div{
+            flex-grow: 1;
+            background-color: rgb(235, 235, 235);
+            margin: 1px;
+            padding: 0px 20px;
+        }
+        .datas>div :nth-child(n){
+            margin:10px 0px;
+
+        }
+        .table h3{
+            margin: 10px;
+        }
+        .table{
+            background-color: whitesmoke;
+            padding: 10px;
+        }
+        .error p{
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            font-size: 23px;
+            letter-spacing: -0.6px;
+            word-spacing: 0px;
+            color: #5E5E5E;
+            font-weight: 600;
+            text-decoration: none solid rgb(68, 68, 68);
+            font-style: normal;
+            font-variant: small-caps;
+            text-transform: none;
+            text-align: center;
+        }
+        .error h1{
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            font-weight: 800;
+            font-size: 36px;
+        }
+        .error{
+            margin: 20px;
+            background-color: aliceblue;
+        }
+        
+    </style>
+    <header><div class="head"><h1>My Weather</h1><input type="search"></div></header>
+    <div class="menu">
+        <div>Today</div>
+        <div>5-day forecast</div>
+    </div>
+    <div class="main">
+    </div>
+    <script>
+        
+        var api="fef7ba3f375572d5f41b9ba4a2606f8a"
+        class SomeObject {
+            constructor(sc = 0, lf = []) {
+                this.date_osn = sc;
+                this.dates = lf;
+            }
+        }
+        var el=document.getElementsByClassName('head')[0].getElementsByTagName('input')[0]
+        var clicket=document.getElementsByClassName('menu')[0].getElementsByTagName('div')
+        for(let d=0;d<clicket.length;d++){
+            clicket[d].addEventListener('click',function(e){
+
+                for(let i=0;i<clicket.length;i++)
+                if(el.value.split(',').length==2)
+                    if(e.target==clicket[i]){
+                        clicket[i].style.borderBottom="2px rgb(3, 150, 76) inset"
+                        if(clicket[i]==clicket[0])
+                            showToday()
+                        else if(clicket[i]==clicket[1])
+                            showDay()
+                    }
+                    else
+                        clicket[i].style.borderBottom="0px"
+                else
+                document.getElementsByClassName('main')[0].innerHTML=funError("Please enter a right enter(Lviv,Ukraine).",404)
+            })
+        }
+        function funError(text,code){
+            var  error;
+            if(code==404){
+            error=`<div class="error">
+                <h1>${code}</h1>
+                <p>${el.value} isn't correct enter.</p>
+                <p>${text}</p>
+                <p>Please enter a correct location</p>
+            </div>`}
+            else if(er>=400 && er<600){
+                error=`<div class="error">
+                <h1>${code}</h1>
+                <p>${el.value} isn't correct enter.</p>
+                <p>${text}</p>
+                <p>Please enter a correct location</p>
+            </div>`
+            }
+        
+        return error
+        }
+        function getXMLRequest(api){
+            const xhr = new XMLHttpRequest();
+            let znach
+            xhr.open("GET", api,false);
+            xhr.onload = () => {
+                if (xhr.status == 200) {                // если код ответа 200
+                    var res=JSON.parse(xhr.response)
+                    znach=res
+                } else {                                // иначе выводим текст статуса
+                    document.getElementsByClassName('main')[0].innerHTML=funError(xhr.statusText,xhr.status)
+                }
+            };
+            xhr.send();
+            return znach
+        }
+        function getCoord(){
+            
+            let locate=document.getElementsByClassName('head')[0].getElementsByTagName('input')[0].value
+            let city=locate.split(',')[0]
+            let country=locate.split(',')[1]
+            var convert=`http://api.openweathermap.org/geo/1.0/direct?q=${city},${getCountryCode(country)}&limit=1&appid=${api}`
+            var file=getXMLRequest(convert)
+            var coord=[file[0].lon,file[0].lat]
+            return coord
+        }
+        function showHourly(coord){
+            var current=`https://api.openweathermap.org/data/2.5/onecall?lat=${coord[0]}&lon=${coord[1]}&units=metric&exclude=current,minutely,daily&appid=${api}`
+            var file=getXMLRequest(current)
+            var st=``
+            st+='<tr>'
+                st+='<th>Today</th>'
+                for(let i=0;i<6;i++){
+                st+=`<td>${timeConverter(file.hourly[i].dt)[3]} ${cheackTime(timeConverter(file.hourly[i].dt)[3])}</td>`
+                
+            }
+            st+='</tr>'
+            st+='<tr>'
+                st+='<td>&nbsp</td>'
+                for(let i=0;i<6;i++){
+                st+=`<td><img src="http://openweathermap.org/img/wn/${file.hourly[i].weather[0].icon}@2x.png"></td>`
+            }
+            st+='</tr>'
+            st+='<tr>'
+                st+='<td>Forecast</td>'
+                for(let i=0;i<6;i++){
+                st+=`<td>${file.hourly[i].weather[0].main}</td>`
+            }
+            st+='</tr>'
+            st+='<tr>'
+                st+='<td>Temp (&#176;C)</td>'
+                for(let i=0;i<6;i++){
+                st+=`<td>${Math.round(file.hourly[i].temp)}&#176;</td>`
+            }
+            st+='</tr>'
+            st+='<tr>'
+                st+='<td>RealFeel</td>'
+                for(let i=0;i<6;i++){
+                st+=`<td>${Math.round(file.hourly[i].feels_like)}&#176;</td>`
+            }
+            st+='</tr>'
+            st+='<tr>'
+                st+='<td>Wind {km/h}</td>'
+                for(let i=0;i<6;i++){
+                st+=`<td>${Math.round(file.hourly[i].wind_speed*3.6)} </td>`
+            }
+            st+='</tr>'
+            return st
+            
+        }
+        function timeConverter(UNIX_timestamp){
+            var a = new Date(UNIX_timestamp * 1000);
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            var year = a.getFullYear();
+            var month = months[a.getMonth()];
+            var date = a.getDate();
+            var hour = a.getHours();
+            var min = a.getMinutes();
+            var sec = a.getSeconds();
+            var days=[,'Mon','Tue','Wed','Thu','Fri','Sat','Sut'];
+            var day = days[a.getDay()];
+            
+            var time = [date,month,year,hour,min,sec,day];
+            return time;
+        }
+        function showCurent(coord){
+            var current=`https://api.openweathermap.org/data/2.5/onecall?lat=${coord[0]}&lon=${coord[1]}&units=metric&exclude=hourly,minutely,daily&appid=${api}`
+            var file=getXMLRequest(current)
+            var curent=file.current
+            var str=``;
+            var cur=`<div class="current">
+                <h3>Current weather<span class="data">${timeConverter(curent.sunrise)[0]}.${timeConverter(curent.sunrise)[1]}.${timeConverter(curent.sunrise)[2]}</span></h3>
+                <div class="info">
+                <div><img src="http://openweathermap.org/img/wn/${curent.weather[0].icon}@2x.png"><p>${curent.weather[0].main}</p></div>
+                <div>
+                    <h1>${Math.round(curent.temp)}&#176;C</h1>
+                    <p>Real Feel ${Math.round(curent.feels_like)}&#176;</p>
+                </div>
+                <div >
+                    <p>Sunrise: ${timeConverter(curent.sunrise)[3]}:${timeConverter(curent.sunrise)[4]} ${cheackTime(timeConverter(curent.sunrise)[4])}</p>
+                    <p>Sunset: ${timeConverter(curent.sunset)[3]}:${timeConverter(curent.sunset)[4]} ${cheackTime(timeConverter(curent.sunset)[4])}</p>
+                    <p>Duration: ${timeConverter(curent.sunset-curent.sunrise)[3]}:${timeConverter(curent.sunset-curent.sunrise)[4]} hr</p>
+                </div>
+                </div>
+            </div>`
+            return cur
+        }
+        function showToday(){         
+            let coord=getCoord()
+            
+            var today=`<div class="today">
+                ${showCurent(coord)}
+            
+            <div class="table">
+                <h3>Hourly</h3>
+                <table>
+                    <tbody>
+                        ${showHourly(coord)}
+                    </tbody>
+                </table>
+            </div>
+            <div class="nearb">
+                <h3>Nearby places</h3>
+                <div></div>
+            </div>
+        </div>`
+            
+            document.getElementsByClassName('main')[0].innerHTML=today
+        }
+        function cheackTime(time){
+            if(time<=12){
+
+                return `AM`
+            }
+            else{
+                return `PM`
+            }
+            
+        }
+        function getMass(file,time){
+            let arr=[]
+            for(let i=0;i<7;i++){
+            for(let j=0;j<file.list.length;j++){
+                if((timeConverter(file.list[j].dt)[0]==timeConverter(time)[0]) && (timeConverter(file.list[j].dt)[3]!=timeConverter(time)[3])){
+                    if(arr.indexOf(file.list[j].dt)==-1){
+                    arr.push(file.list[j].dt)}
+                }
+            }
+        }
+        return arr
+        }
+        function search(file,data){
+            for(let i=0;i<file.list.length;i++){
+                if(file.list[i].dt==data){
+                    return file.list[i]
+                }
+            }
+        }
+        function showHour(file,se){
+            var st=``
+            st+='<tr>'
+                st+=`<th>${1}</th>`
+                for(let i=0;i<se.length;i++){
+                st+=`<td>${timeConverter(search(file,se[i]).dt)[3]} ${cheackTime(timeConverter(search(file,se[i]).dt)[3])}</td>`
+            }
+            st+='</tr>'
+            st+='<tr>'
+                st+='<td>&nbsp</td>'
+                for(let i=0;i<se.length;i++){
+                st+=`<td><img src="http://openweathermap.org/img/wn/${search(file,se[i]).weather[0].icon}@2x.png"></td>`
+            }
+            st+='</tr>'
+            st+='<tr>'
+                st+='<td>Forecast</td>'
+                for(let i=0;i<se.length;i++){
+                st+=`<td>${search(file,se[i]).weather[0].main}</td>`
+            }
+            st+='</tr>'
+            st+='<tr>'
+                st+='<td>Temp (&#176;C)</td>'
+                for(let i=0;i<se.length;i++){
+                st+=`<td>${Math.round(search(file,se[i]).main.temp)}&#176;</td>`
+            }
+            st+='</tr>'
+            st+='<tr>'
+                st+='<td>RealFeel</td>'
+                for(let i=0;i<se.length;i++){
+                st+=`<td>${Math.round(search(file,se[i]).main.feels_like)}&#176;</td>`
+            }
+            st+='</tr>'
+            st+='<tr>'
+                st+='<td>Wind {km/h}</td>'
+                for(let i=0;i<se.length;i++){
+                st+=`<td>${Math.round(search(file,se[i]).wind.speed*3.6)} </td>`
+            }
+            st+='</tr>'
+            return st
+        }
+        function showDay(){
+            
+            let coord=getCoord()
+            var daily=`https://api.openweathermap.org/data/2.5/forecast?lat=${coord[0]}&lon=${coord[1]}&units=metric&appid=${api}`
+            
+            var file=getXMLRequest(daily)
+            var today=new Date()
+            today.setHours(0);
+            today.setMinutes(0);
+            today.setSeconds(0);
+            today.setMilliseconds(0);
+            var now=Math.round(today.getTime()/1000.0)
+            var fer=[]
+            
+            for(let i=0;i<file.list.length;i++){
+                for(let j=0;j<5;j++){ 
+                    if(file.list[i].dt-now==86400*(j+1)){
+                        var elem=new SomeObject(file.list[i].dt,getMass(file,file.list[i].dt))
+                        fer.push(elem)
+
+                    }
+                }
+            }
+
+
+            var str=`<div class="datas">`
+            for(let i=0;i<fer.length;i++){
+                var st=search(file,fer[i].date_osn)
+
+                str+=`<div>
+                    <h3 class="day">${timeConverter(st.dt)[6]}</h3>
+                    <p class="data">${timeConverter(st.dt)[1]} ${timeConverter(st.dt)[0]}</p>
+                    <img class="img" src="http://openweathermap.org/img/wn/${st.weather[0].icon}@2x.png">
+                    <h1 class="temp">${Math.round(st.main.temp)} &#176 C</h1>
+                    <p class="infoimg">${st.weather[0].main}</p>
+                    </div>`
+                    
+            }
+            str+=`</div>`
+
+            var table_tr=[]
+            
+            for(let i=0;i<fer.length;i++){
+                table_tr.push(showHour(file,fer[i].dates))
+
+            }
+            
+            var table=`<div class="table">`
+                table+=`<h3>Hourly</h3>
+                <table>
+                    <tbody>
+                        ${table_tr[0]}
+                    </tbody>
+                </table>
+            </div>`         
+            var five=`<div class="five">
+                ${str}
+                ${table}
+            </div>`
+            document.getElementsByClassName('main')[0].innerHTML=five
+            var elems=document.getElementsByClassName('datas')[0].getElementsByTagName('div')
+            elems[0].style.backgroundColor="rgb(245, 245, 245)"
+            var enter=document.getElementsByClassName('table')[0].getElementsByTagName('tbody')[0]
+            for(let i=0;i<elems.length;i++){
+                elems[i].addEventListener('click',function(e){
+                    enter.innerHTML=table_tr[i]
+                    for(let j=0;j<elems.length;j++){
+                        if(j==i)
+                            elems[j].style.backgroundColor="rgb(245, 245, 245)"
+                        else
+                            elems[j].style.backgroundColor="rgb(235, 235, 235)"
+                    }  
+                })
+            }
+        }
+        
+    </script>
+    <script src="isoCountry.js"></script>
+</body>
+</html>
